@@ -1,0 +1,347 @@
+﻿@model RedeSocialCondominio.ViewModels.LocaisViewModel
+
+<div class="text-center">
+    <img src="~/Images/calendar.png" width="100" alt="" />
+    <h3>Reserva de espaços</h3>
+    <h4>Reserve seu espaço no condomínio.</h4>
+</div>
+
+<br />
+
+<div id="calender"></div>
+<span class="hide" id="usuarioLogado">@Model.UserId</span>
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span id="eventTitle"></span></h4>
+            </div>
+            <div class="modal-body acoes">
+                <button id="btnDelete" class="btn btn-danger btn-sm pull-right">Remover</button>
+                <button id="btnEdite" class="btn btn-info btn-sm pull-right" style="margin-right: 5px;">Editar</button>
+                <p id="detalhes"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="btnFechar">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="myModalSave" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Sua reserva</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <input type="hidden" id="reservaId" value="0" />
+                    <div class="form-group">
+                        <label>Nome </label>
+                        <input type="text" id="txtNome" class="form-control" required="required" />
+                    </div>
+                    <div class="form-group">
+                        <label>Descrição </label>
+                        <textarea rows="3" id="txtDescricao" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group form-inline">
+                        <label>De </label>
+                        <div class="input-group">
+                            <input type="text" id="txtDiaInicial" class="form-control" required="required" disabled/>
+                            <input type="time" id="txtHoraInicial" class="form-control" required="required" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Até </label>
+                        <div class="input-group timepicker">
+                            <input type="text" id="txtDiaFinal" class="form-control" required="required" disabled/>
+                            <input type="time" id="txtHoraFinal" class="form-control" required="required" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Precisa de hora extra para organizar? Quanto? </label>
+                        <div class="input-group timepicker">
+                            <input type="time" id="txtHrExtraInicial" class="form-control" required="required" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Precisa de hora extra para deixar o local como encontrou? Quanto?</label>
+                        <div class="input-group">
+                            <input type="time" id="txtHrExtraFinal" class="form-control" required="required" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>O que deseja reservar?</label>
+                        @Html.DropDownListFor(r => r.Locais, new SelectList(Model.Locais, "Id", "Nome"), "", new { @class = "form-control", id = "localId", required = "required" })
+                    </div>
+                    <div class="form-group">
+                        <label>Cor da reserva </label>
+                        <select id="themeReserva" class="form-control">
+                            <option value="#dc3545">Vermelho</option>
+                            <option value="#ffc107">Amarelo</option>
+                            <option value="#17a2b8">Azul</option>
+                            <option value="#6c757d">Cinza</option>
+                            <option value="#28a745">Verde</option>
+                        </select>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnSave" class="btn btn-primary">Salvar</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="btn-agendar-visitante">
+    <button class="btn btn-secondary">@Html.ActionLink("Voltar", "Index", "Home")</button>
+</div>
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.print.css" rel="stylesheet" media="print" />
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            var events = [];
+            var reservaSelecionada = null;
+            RenderCalendar();
+
+            function RenderCalendar() {
+                events = [];
+
+                $.ajax({
+                    type: "GET",
+                    url: "/Reserva/GetReservas",
+                    success: function (data) {
+                        $.each(data, function (i, v) {
+                            events.push({
+                                reservaId: v.Id,
+                                title: v.Nome,
+                                description: v.Descricao,
+                                start: moment(v.HoraInicio),
+                                end: moment(v.HoraFim),
+                                color: v.CorReserva,
+                                isFullDay: v.IsDiaTodo,
+                                hrExtraInicial: moment(v.HoraExtraInicial),
+                                hrExtraFinal: moment(v.HoraExtraFinal),
+                                localId: v.LocalId,
+                                userId: v.UserId
+                            });
+                        })
+
+                        GerarCalendario(events);
+                    },
+                    error: function (error) {
+                        alert('Um erro aconteceu. Tente novamente.');
+                    }
+                })
+            }
+
+            function GerarCalendario(eventos) {
+                $('#calender').fullCalendar('destroy');
+                $('#calender').fullCalendar({
+                    monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                    monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                    dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                    dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+                    buttonText: {
+                        today: 'Hoje',
+                        month: 'Mês',
+                        week: 'Semana',
+                        day: 'Dia'
+                    },
+                    contentHeight: 370,
+                    defaultDate: new Date(),
+                    timeFormat: 'HH:mm',
+                    header: {
+                        left: 'prev, next today',
+                        center: 'title',
+                        right: 'month, basicWeek, basicDay'
+                    },
+                    eventLimit: true,
+                    dayRender: function (date, cell) {
+                        if (moment().diff(date, 'days') > 0) {
+                            cell.css("background-color", "#ECECEC");
+                        } 
+                    },
+                    eventColor: '#378006',
+                    events: events,
+                    eventClick: function (calEvent, jsEvent, view) {
+                        reservaSelecionada = calEvent;
+                        $('#myModal #eventTitle').text(calEvent.title);
+                        var $descricao = $('<div/>');
+                        $descricao.append($('<p/>').html('<b>Início: </b>' + calEvent.start.format('HH:mm')));
+                        $descricao.append($('<p/>').html('<b>Fim: </b>' + calEvent.end.format('HH:mm')));
+                        $descricao.append($('<p/>').html('<b>Descrição: </b>' + calEvent.description));
+                        $descricao.append($('<p/>').html('<b>Hora extra inicial: </b>' + calEvent.hrExtraInicial.format('HH:mm')));
+                        $descricao.append($('<p/>').html('<b>Hora extra final: </b>' + calEvent.hrExtraFinal.format('HH:mm')));
+
+                        console.log(reservaSelecionada.userId + '\n' + $('#usuarioLogado').text());
+
+                        var usuarioLogado = $('#usuarioLogado').text();
+                        if (reservaSelecionada.userId != usuarioLogado) {
+                            $('#btnDelete').addClass('hide');
+                            $('#btnEdite').addClass('hide');
+                        } else {
+                            $('#btnDelete').removeClass('hide');
+                            $('#btnEdite').removeClass('hide');
+                        }
+
+                        $('#myModal #detalhes').empty().html($descricao);
+                        $('#myModal').modal();
+                    },
+                    selectable: true,
+                    select: function (start, end) {
+                        reservaSelecionada = {
+                            reservaId: 0,
+                            title: '',
+                            description: '',
+                            start: start,
+                            end: start,
+                            color: '',
+                            isFullDay: false,
+                            hrExtraInicial: '',
+                            hrExtraFinal: '',
+                            localId: 0
+                        };
+                        abrirFormEditar();
+                        $('#calender').fullCalendar('unselect');
+                    }
+                })
+            }
+
+
+            $('#btnEdite').click(function () {
+                abrirFormEditar();
+            })
+
+
+            $('#btnDelete').click(function () {
+                if (reservaSelecionada != null && confirm('Você tem certeza?')) {
+                    $.ajax({
+                        type: "POST",
+                        url: '/Reserva/Deletar',
+                        data: { 'reservaId': reservaSelecionada.reservaId },
+                        success: function (data) {
+                            if (data.status) {
+                                RenderCalendar();
+                                $('#myModal').modal('hide');
+                            }
+                        },
+                        error: function () {
+                            alert('Falhou.');
+                        }
+                    })
+                }
+            })
+
+            function abrirFormEditar() {
+                if (reservaSelecionada != null) {
+                    $('#reservaId').val(reservaSelecionada.reservaId);
+                    $('#txtNome').val(reservaSelecionada.title);
+                    $('#txtDescricao').val(reservaSelecionada.description);
+                    $('#txtHoraInicial').val(reservaSelecionada.start.format('HH:mm'));
+                    $('#txtDiaInicial').val(reservaSelecionada.start.format('DD/MM/YYYY'))
+                    $('#txtHoraFinal').val(reservaSelecionada.end.format('HH:mm'));
+                    $('#txtDiaFinal').val(reservaSelecionada.end.format('DD/MM/YYYY'));
+                    $('#localId').val(reservaSelecionada.localId);
+                    $('#isDiaTodo').prop("checked", reservaSelecionada.isFullDay || false);
+                    $('#isDiaTodo').change();
+                    $('#txtHrExtraInicial').val(reservaSelecionada.hrExtraInicial);
+                    $('#txtHrExtraFinal').val(reservaSelecionada.hrExtraFinal);
+                    $('#themeReserva').val(reservaSelecionada.color);
+
+                    if (reservaSelecionada.reservaId > 0) {
+                        $('#txtHrExtraInicial').val(reservaSelecionada.hrExtraInicial.format('HH:mm'));
+                        $('#txtHrExtraFinal').val(reservaSelecionada.hrExtraFinal.format('HH:mm'));
+                    }
+                }
+
+                $('#myModal').modal('hide');
+                $('#myModalSave').modal();
+            }
+
+            $('#btnSave').click(function () {
+                var data = {
+                    Id: $('#reservaId').val(),
+                    Nome: $('#txtNome').val().trim(),
+                    Descricao: $('#txtDescricao').val(),
+                    HoraDiaInicio: $('#txtDiaInicial').val() + ' ' + $('#txtHoraInicial').val(),
+                    HoraDiaFinal: $('#txtDiaFinal').val() + ' ' + $('#txtHoraFinal').val(),
+                    HoraDiaExtraInicial: $('#txtHrExtraInicial').val(),
+                    HoraDiaExtraFinal: $('#txtHrExtraFinal').val(),
+                    isDiaTodo: $('#isDiaTodo').is(':checked'),
+                    LocalId: $('#localId').val(),
+                    CorReserva: $('#themeReserva').val()
+                }
+
+                SalvarReserva(data);
+
+                console.log('cheguei aqui');
+                console.log(data);
+            })
+
+            function SalvarReserva(data) {
+                console.log(data);
+                $.ajax({
+                    type: "POST",
+                    url: '/reserva/salvar',
+                    data: data,
+                    success: function (data) {
+                        if (data.status) {
+                            toastr.info(data.status);
+                            RenderCalendar();
+                            $('#myModalSave').modal('hide');
+                        }
+                    },
+                    error: function () {
+                        alert('Ocorreu um erro. Por favor, tente de novo');
+                    }
+                })
+            }
+
+
+        })
+
+    </script>
+
+
+    <script type="text/javascript" language="javascript">
+        $(function () {
+            $('#txtDiaInicial, #txtDiaFinal').datepicker({
+                dateFormat: 'dd/MM/yy',
+                dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+                dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                nextText: 'Proximo',
+                prevText: 'Anterior',
+                minDate: 0,
+                changeMonth: true,
+                changeYear: true,
+                showOtherMonths: true,
+                selectOtherMonths: true
+            }).css("display", "inline-block")
+            .next("button").button({
+                icons: { primary: "ui-icon-calendar" },
+                label: "Selecione uma data",
+                text: false
+            });
+        });
+
+        $('#date_begin,#date_end').datetimepicker();
+    </script>
+
+
+}

@@ -1,0 +1,59 @@
+﻿@model RedeSocialCondominio.ViewModels.OcorrenciasViewModel
+
+@{
+    /**/
+
+    ViewBag.Title = "Index";
+}
+@using (Html.BeginForm("RegistrarOcorrencia", "Ocorrencia", method: FormMethod.Post))
+{
+
+    <div class="text-center">
+        <img src="~/Images/check-mark.png" width="100" alt="" />
+        <h3>Registro de Ocorrências</h3>
+        <h4>Cadastre e consulte ocorrências.</h4>
+    </div>
+
+    if (Model.Sucesso)
+    {
+        <div>
+            <div class="alert alert-success" role="alert">Sua(s) ocorrência(s) foi/foram registrada(s) com sucesso!</div>
+        </div>
+    }
+
+    <div class="col-md-6">
+
+        <div class="agendar-visitante">
+            <h4>
+                <span class="negrito">
+                    Olá, @Model.NomeUsuarioLogado!
+                </span>
+            </h4>
+        </div>
+        <br />
+        <div>
+            <b>Todos os campos com <span class="obrigatorio">*</span> são obrigatórios. </b>
+        </div>
+        <div>
+            <div class="fields-align">
+                @Html.Label("Assunto: ") <span class="obrigatorio">*</span>
+                @Html.TextBoxFor(o => o.Assunto, new { @class = "form-control", required = "required" })
+            </div>
+            <div class="fields-align">
+                @Html.Label("Descrição: ")
+                @Html.TextAreaFor(o => o.Descricao, new { rows = "4", cols = "30", @class = "form-control", placeholder = "Deixe aqui sua descrição sobre a ocorrência. Lembre-se que todos a receberão." })
+            <div class="form-group">
+            </div>
+                <label>Deseja enviar para usuários específicos?</label>
+                <h6>Se não quiser escolher nenhum, todos a receberão.</h6>
+                @Html.DropDownListFor(r => r.PerfilId, new SelectList(Model.PerfisUsuarios, "Id", "Nome"), "", new { @class = "form-control" })
+            </div>
+
+
+            <div class="btn-agendar-visitante">
+                <button class="btn btn-primary">Registrar</button>&nbsp;
+                <button class="btn btn-secondary">@Html.ActionLink("Voltar", "Index", "Home")</button>
+            </div>
+        </div>
+    </div>
+}

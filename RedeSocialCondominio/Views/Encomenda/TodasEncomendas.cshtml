@@ -1,0 +1,131 @@
+﻿@model RedeSocialCondominio.ViewModels.TodasAsEncomendasViewModel
+
+
+@using (Html.BeginForm("FiltrarEncomendas", "Encomenda", method: FormMethod.Post))
+{
+
+    <div class="text-center">
+        <img src="~/Images/box.png" width="100" alt="" />
+        <h3>Todas as encomendas</h3>
+        <h5>Acompanhe, confirme ou cancele encomendas.</h5>
+        <h6>Utilize os campos abaixo para filtrar os resultados por período.</h6>
+    </div>
+
+    <br />
+
+    <div align="center">
+        <div class="col-md-12 fields-align">
+            <div class="col-md-6" align="left">
+                @Html.Label("De", new { @class = "de" })
+                @Html.EditorFor(f => f.De, new { htmlAttributes = new { @class = " de form-control tamanho-datas", required = "required" } })
+            </div>
+            <div class="col-md-6" align="left">
+                @Html.Label("Até")
+                @Html.EditorFor(f => f.Ate, new { htmlAttributes = new { @class = "form-control tamanho-datas", required = "required" } })
+                <div>
+                    <button type="submit" class="btn btn-primary btn-filtrar">
+                        <span class="glyphicon glyphicon-filter"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div align="center">
+    @if (Model.Encomendas.Count() != 0)
+    {
+        <table class="table table-bordered tbl-visitantes">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Descrição</th>
+                    <th scope="col">Frágil?</th>
+                    <th scope="col">Hora</th>
+                    <th scope="col">Responsável</th>
+                    <th scope="col">Quem recebeu</th>
+                    <th scope="col">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var e in Model.Encomendas)
+                {
+                    <tr>
+                        <td class="col-sm-1" scope="row">@e.DescricaoEncomenda</td>
+                        <td class="col-sm-1" scope="row">
+                            @if (e.Fragil)
+                            {
+                                <span>Sim</span>
+                            }
+                            else
+                            {
+                                <span>Não</span>
+                            }
+                        </td>
+                        <td class="col-sm-1" scope="row" encomendaId="e.Id">@e.DataHoraEntrega</td>
+                        <td class="col-sm-1" scope="row">@e.NomeResponsavel</td>
+                        <td class="col-sm-1" scope="row">@e.NomeQuemRecebeu</td>
+                        @if (e.Entregue)
+                        {
+                            <td class="col-sm-1" scope="row" align="center" value="@e.Id">
+
+                                <button class="btn btn-default ok disabled" onclick="EncomendaRecebida(@e.Id)">
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                </button>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button class="btn btn-default not-ok disabled">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button>
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="col-sm-1" scope="row" align="center" value="@e.Id">
+
+                                <button class="btn btn-default ok" onclick="EncomendaRecebida(@e.Id)">
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                </button>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button class="btn btn-default not-ok">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button>
+                            </td>
+                        }
+
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-warning aviso" role="alert"><b>Não</b> há nenhuma encomenda registrada nesse intervalo de tempo!</div>
+    }
+</div>
+
+<div class="btn-agendar-visitante">
+    <button class="btn btn-secondary">@Html.ActionLink("Voltar", "Index", "Home")</button>&nbsp;
+    <button class="btn btn-secondary">@Html.ActionLink("Registrar Encomenda", "Index", "Encomenda")</button>
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+@*<script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>*@
+
+@section Scripts {
+
+    <script type="text/javascript" language="javascript">
+        function EncomendaRecebida(id) {
+            if (confirm("Encomenda realmente entregue?")) {
+                var encomendaId = id;
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("EncomendaRecebida", "Encomenda")' + "?encomendaId=" + encomendaId,
+                    dataType: 'json'
+                });
+
+            }
+        }
+    </script>
+
+}

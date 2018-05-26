@@ -1,0 +1,189 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Rede Social de Condomínio</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/themes/base/all.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+    <link href="toastr.css" rel="stylesheet" />
+    <script src="toastr.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/0.10.0/lodash.min.js"></script>
+    <script type="text/javascript" src="scripts/moment.x.x.min.js"></script>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Início", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav"></ul>
+                @Html.Partial("_LoginPartial")
+
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        @RenderSection("SPAViews", required: false)
+
+    </div>
+
+    <script type="text/x-template" id="notificacoes-template">
+        <ul class="notifications lista-notificacoes ">
+            <%
+            _.each(notificacoes, function(n){
+            if (n.tipoNotificacao == 1 && n.perfilId != 2 && n.perfilId != 3){ %>
+                <li><span class="highlight hline">Foi registrada uma ocorrência com o assunto: <b><%=n.assunto%></b> e descrição: <%=n.descricao%></span><hr /></li>
+            <%}
+
+            if (n.tipoNotificacao == 1 && n.perfilId == 2 || n.perfilId == 3){ %>
+            <li><span class="highlight hline">Foi registrada uma ocorrência com o assunto: <b><%=n.assunto%></b> e descrição: <%=n.descricao%></span><hr /></li>
+            <%}
+
+            if (n.tipoNotificacao == 2){ %>
+                <li><span class="highlight hline">O(A) <%= n.espaco.toLowerCase() %></span> foi reservado(a) de <%= moment(n.horaInicial).format('HH:mm') %> às <%= moment(n.horaFinal).format('HH:mm') %>, no dia <%= moment(n.dia).format('DD/MM/YYYY') %>.<hr /><li>
+            <% }
+
+            if(n.tipoNotificacao == 3){%>
+                <li><span class="highlight">Foi marcada uma reunião dia <%=moment(n.dia).format('DD/MM/YYYY')%>, de <%=moment(n.horaInicial).format('HH:mm')%> às <%=moment(n.horaFinal).format('HH:mm') %>. O assunto da reunião é <%= n.assunto %>. Por favor, compareça! </span><hr /></li>
+            <%}
+
+            if(n.tipoNotificacao == 4 && n.horaEncomendaEntregue != null){%>
+                <li><span class="highlight">Sua encomenda foi recebida às <%=moment(n.horaEncomendaEntregue).format('HH:mm')%>. </span><hr /></li>
+            <%}
+
+            if(n.tipoNotificacao == 4 && n.horaEncomendaEntregue == 0){%>
+            <li><span class="highlight">Uma encomenda foi registrada!</span><hr /></li>
+            <%}
+            })
+            %>
+
+
+        </ul>
+
+    </script>
+
+
+    <footer class="footer">
+        <hr>
+        <div class="container">
+            <span class="text-muted">&copy; 2018 - Todos os direitos reservados. Icons made by <a target="_blank" href="https://www.flaticon.com" title="https://www.flaticon.com">FlatIcon</a> and is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></span>
+        </div>
+    </footer>
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.11.4.min.js"></script>
+
+    @Scripts.Render("~/bundles/lib")
+
+    @RenderSection("Scripts", required: false)
+
+    <script>
+        $(document).ready(function () {
+
+            $.getJSON("api/notificacoes", { usuarioId: $('#usuarioId').text().trim() }, function (notificacoes) {
+                
+                var ocorrencias = 0; // tipo 1
+                var reservas = 0; // tipo 2
+                var reunioes = 0; // tipo 3
+                var encomendas = 0; // tipo 4
+                var mudancas = 0; // tipo 5
+                
+
+                if (notificacoes.length == 0) {
+                    $(".bagde").addClass("bagde-nont");
+                    return;
+                }
+
+                for (var i = 0; i < notificacoes.length; i++) {
+
+                    if (notificacoes[i].tipoNotificacao == 1) {
+                        ocorrencias += 1;
+
+                        $("#js-notifications-ocorrencias-count")
+                            .text(ocorrencias)
+                            .removeClass("hideOcorrencias")
+                            .addClass("animated bounceInDown");
+
+                    }
+
+                    if (notificacoes[i].tipoNotificacao == 2) {
+                        reservas += 1;
+
+                        $("#js-notifications-reservas-count")
+                            .text(reservas)
+                            .removeClass("hideReserva")
+                            .addClass("animated bounceInDown"); 
+
+                    }
+
+                    if (notificacoes[i].tipoNotificacao == 3) {
+                        reunioes += 1;
+
+                        $("#js-notifications-reunioes-count")
+                            .text(reunioes)
+                            .removeClass("hideReunioes")
+                            .addClass("animated bounceInDown");
+
+                    }
+
+                    if (notificacoes[i].tipoNotificacao == 4) {
+                        encomendas += 1;
+                    }
+
+                    if (notificacoes[i].tipoNotificacao == 5) {
+                        mudancas += 1;
+                    }
+                }
+
+                $(".js-notifications-count")
+                    .text(notificacoes.length)
+                    .removeClass("hide")
+                    .addClass("animated bounceInDown");
+
+                $(".notifications").popover({
+                    html: true,
+                    title: "<b>Notificações</b>",
+                    content: function () {
+                        var compiled = _.template($("#notificacoes-template").html());
+                        return compiled({ notificacoes: notificacoes });
+                    },
+                    placement: "bottom",
+                    template: '<div class="popover popover-notifications" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+                }).on("shown.bs.popover", function () {
+                    $.post("http://localhost:59892/api/Notificacoes/NotificacoesForamLidas?usuarioId=" + $('#usuarioId').text().trim())
+                        .success(function () {
+                            $(".js-notifications-count")
+                                .text("")
+                                .addClass("hide")
+                                .addClass("hideReunioes")
+                                .addClass("hideReserva")
+                                .addClass("hideOcorrencias");
+                        })
+
+                });
+
+            });
+
+        });
+
+    </script>
+</body>
+</html>
+

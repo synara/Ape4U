@@ -1,0 +1,67 @@
+﻿@model RedeSocialCondominio.ViewModels.ReuniaoViewModel
+
+@using (Html.BeginForm("AgendarReuniao", "Reuniao", method: FormMethod.Post))
+{
+    if (Model.Sucesso)
+    {
+        <div>
+            <div class="alert alert-success" role="alert">Reunião agendada com sucesso!</div>
+        </div>
+    }
+    if (Model.Erro)
+    {
+        <div>
+            <div class="alert alert-danger" role="alert">
+                @Model.Mensagem
+            </div>
+        </div>
+    }
+
+    <div class="text-center">
+        <img src="~/Images/business-presentation.png" width="100" alt="" />
+        <h3>Agendamento de Reunião</h3>
+        <h4>Cadastre e consulte suas reuniões futuras.</h4>
+    </div>
+
+    <div class="col-md-6">
+
+        <div class="agendar-visitante">
+            <h4>
+                <span class="negrito">
+                    Olá, @Model.NomeUsuarioLogado!
+                </span>
+            </h4>
+        </div>
+        <br />
+        <div>
+            <b>Todos os campos com <span class="obrigatorio">*</span> são obrigatórios. </b>
+        </div>
+
+        <div class="fields-align">
+            @Html.Label("Assunto da reunião: ") <span class="obrigatorio">*</span>
+            @Html.TextBoxFor(r => r.Assunto, new { @class = "form-control", required = "required" })
+        </div>
+        <div class="fields-align">
+            @Html.Label("Descrição: ") <span class="obrigatorio">*</span>
+            @Html.TextAreaFor(r => r.Descricao, new { @class = "form-control", required = "required", placeholder = "Deixe aqui sua descrição sobre a reunião." })
+        </div>
+        <div class="fields-align">
+            @Html.Label("Dia: ") <span class="obrigatorio">*</span>
+            @Html.EditorFor(model => model.Dia, new { htmlAttributes = new { @class = "form-control", required = "required", type = "date" } })
+        </div>
+        <div class="fields-align">
+            @Html.Label("Hora de início: ") <span class="obrigatorio">*</span>
+            @Html.EditorFor(model => model.HoraInicio, new { htmlAttributes = new { @class = "form-control", required = "required", type = "time" } })
+        </div>
+
+        <div class="fields-align">
+            @Html.Label("Hora de término: ") <span class="obrigatorio">*</span>
+            @Html.EditorFor(model => model.HoraFim, new { htmlAttributes = new { @class = "form-control", required = "required", type = "time" } })
+        </div>
+
+        <div class="btn-agendar-visitante">
+            <button type="submit" class="btn btn-primary">Agendar</button>&nbsp;
+            <button class="btn btn-secondary">@Html.ActionLink("Voltar", "Index", "Home")</button>
+        </div>
+    </div>
+}

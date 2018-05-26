@@ -1,0 +1,106 @@
+﻿@model RedeSocialCondominio.ViewModels.VisitantesViewModel
+
+@using (Html.BeginForm("RegistrarVisitante", "Visitante", method: FormMethod.Post))
+{
+    <div class="text-center">
+        <img src="~/Images/network.png" width="100" alt="" />
+        <h3>Agendamento de Visitantes</h3>
+        <h4>Informe-nos quem te fará uma visita.</h4>
+    </div>
+
+    <br />
+
+    if (Model.Sucesso)
+    {
+        <div>
+            <div class="alert alert-success" role="alert">Sua(s) visita(s) foi/foram registrada(s) com sucesso!</div>
+        </div>
+    }
+
+    <div class="col-md-6">
+
+        <div class="agendar-visitante">
+            <h4>
+                <span class="negrito">
+                    Olá, @Model.NomeUsuarioLogado!
+                </span>
+            </h4><br />
+
+            <h5>Se a visita contar com mais de uma pessoa, registre um "líder".</h5>
+        </div>
+        <br />
+        <div>
+            <b>Todos os campos com <span class="obrigatorio">*</span> são obrigatórios. </b>
+        </div>
+
+        <div class="campos-agendar-visitante">
+            <div class="fields-align">
+                @Html.Label("Nome do visitante ") <span class="obrigatorio">*</span>
+                @Html.TextBoxFor(v => v.NomeVisitante, new { @class = "form-control", required = "required" })
+            </div>
+
+            <div class="fields-align">
+                @Html.Label("Dia da visita ") <span class="obrigatorio">*</span>
+                @Html.EditorFor(model => model.DataVisita, new { htmlAttributes = new { @class = "form-control", required = "required", type = "date" } })
+            </div>
+
+            <div class="fields-align">
+                @Html.Label("Hora da visita ") <span class="obrigatorio">*</span>
+                @Html.TextBoxFor(v => v.HoraVisita, new { @class = "form-control", required = "required", type = "time" })
+            </div>
+
+            <div class="fields-align">
+                @Html.Label("Comentário ")
+                @Html.TextAreaFor(v => v.Comentario, new { rows = "4", cols = "30", @class = "form-control", placeholder = "Algum comentário que queira deixar que possa nos ajudar com a sua visita?" })
+            </div>
+
+            <div class="btn-agendar-visitante">
+                <button type="submit" class="btn btn-primary">Incluir</button>&nbsp;
+                <button class="btn btn-secondary">@Html.ActionLink("Voltar", "Index", "Home")</button>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="agendar-visitante negrito">
+            Seus visitantes recentes
+        </div>
+        @{
+            if (Model.MeusVisitantes.Count() == 0)
+            {
+                <div class="">
+                    Você não possui visitantes recentes!
+                </div>
+            }
+            else
+            {
+                <table class="table table-sm fields-align">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nome</th>
+                            <th scope="col">Dia</th>
+                            <th scope="col">Hora</th>
+                            <th scope="col">Comentário</th>
+                        </tr>
+                    </thead>
+
+
+                    @foreach (var visitante in Model.MeusVisitantes)
+                    {
+                        <tbody>
+                            <tr>
+                                <td>@visitante.Nome</td>
+                                <td>@visitante.DiaVisita.ToString("dd/MM/yyy")</td>
+                                <td>@visitante.HoraVisita.ToString("HH:mm")</td>
+                                <td>@visitante.Comentario</td>
+                            </tr>
+                        </tbody>
+                    }
+                </table>
+
+            }
+        }
+
+    </div>
+}

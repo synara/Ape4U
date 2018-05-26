@@ -1,0 +1,340 @@
+﻿*,
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+    font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+body {
+    margin-top: 50px;
+    padding-top: 50px;
+    padding-bottom: 20px;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+    margin-bottom: 60px; /* Margin bottom by footer height */
+}
+
+.navbar-inverse {
+    background-color: #1486bf;
+    border-color: #fff;
+}
+
+    .navbar-inverse .navbar-nav > li > a {
+        color: #fff;
+    }
+
+    .navbar-inverse .navbar-brand {
+        color: #fff;
+    }
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+/* Set padding to display errors that occur during databinding */
+.padding-error {
+    padding-top: 20px;
+}
+
+@media only screen and (max-width: 767px) {
+    .nofloat {
+        float: none;
+        padding: 10px 15px;
+    }
+}
+
+.agendar-mudanca {
+    margin-top: 3%;
+}
+
+.fields-align {
+    margin-top: 1%;
+}
+
+.obrigatorio {
+    color: red;
+}
+
+.opcoes {
+    /*background-color: #ff8584;*/
+    background-color: #ffa3a3;
+    color: black;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.tabela-opcoes {
+    width: 25em;
+}
+
+.opcoes-align {
+    margin-top: 3%;
+}
+
+.agendar-visitante {
+    margin-top: 15px;
+    font-size: 15px;
+}
+
+.campos-agendar-visitante {
+    margin-top: 2em;
+}
+
+.btn-agendar-visitante {
+    margin-top: 1em;
+}
+
+.negrito {
+    font-weight: bold;
+}
+
+.tbl-visitantes {
+    margin-top: 3em;
+    width: 70em;
+}
+
+.campos-filtro-visitantes {
+    float: left;
+    width: 150px;
+    display: inline;
+}
+
+.de {
+    margin-right: 18.5em;
+}
+
+.btn-filtrar {
+    margin-top: -57px;
+    margin-left: 22em;
+}
+
+.aviso {
+    margin-top: 5em;
+}
+
+.cards {
+    width: 34rem;
+    border: 1px solid #DCDCDC;
+    border-radius: 4px;
+    text-align: justify;
+    margin-top: 7em;
+}
+
+.ok {
+    color: forestgreen;
+}
+
+.not-ok {
+    color: orangered;
+}
+
+.form-control {
+    padding-left: 5px;
+    max-width: 100%;
+}
+
+.form-signin {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+    .form-signin input[type="password"] {
+        margin-bottom: 10px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+    .form-signin input[type="text"] {
+        margin-top: 10px;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px; /* Set the fixed height of the footer here */
+    line-height: 0px; /* Vertically center the text there */
+    background-color: #f5f5f5;
+}
+
+img:hover {
+    background-color: rgba(207, 207, 207, 0.52);
+    border-radius: 10px;
+}
+
+.acoes {
+    font-family: Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+/*.container {
+    width: auto;
+    max-width: 680px;
+    padding: 0 15px;
+}*/
+.lista-notificacoes {
+    list-style: none;
+    margin-left: -3em;
+}
+
+.hr {
+    border-bottom: 0.1px dashed #ccc;
+}
+
+
+/* BADGE: */
+
+@import "animate.css";
+
+.badgeHome {
+    display: block;
+    position: absolute;
+    top: 8px;
+    right: 81px;
+    line-height: 18px;
+    height: 21.3px;
+    padding: 0 6px;
+    color: white;
+    text-shadow: 0 1px rgba(0, 0, 0, 0.25);
+    border: 1px solid;
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.3), 0 1px 1px rgba(0, 0, 0, 0.08);
+    box-shadow: inset 0 1px rgba(255, 255, 255, 0.3), 0 1px 1px rgba(0, 0, 0, 0.08);
+}
+
+.badgeHome {
+    background: #67c1ef;
+    border-color: #30aae9;
+    background-image: -webkit-linear-gradient(top, #acddf6, #67c1ef);
+    background-image: -moz-linear-gradient(top, #acddf6, #67c1ef);
+    background-image: -o-linear-gradient(top, #acddf6, #67c1ef);
+    background-image: linear-gradient(to bottom, #acddf6, #67c1ef);
+}
+
+    .badgeHome.green {
+        background: #77cc51;
+        border-color: #59ad33;
+        background-image: -webkit-linear-gradient(top, #a5dd8c, #77cc51);
+        background-image: -moz-linear-gradient(top, #a5dd8c, #77cc51);
+        background-image: -o-linear-gradient(top, #a5dd8c, #77cc51);
+        background-image: linear-gradient(to bottom, #a5dd8c, #77cc51);
+    }
+
+    .badgeHome.yellow {
+        background: #faba3e;
+        border-color: #f4a306;
+        background-image: -webkit-linear-gradient(top, #fcd589, #faba3e);
+        background-image: -moz-linear-gradient(top, #fcd589, #faba3e);
+        background-image: -o-linear-gradient(top, #fcd589, #faba3e);
+        background-image: linear-gradient(to bottom, #fcd589, #faba3e);
+    }
+
+    .badgeHome.red {
+        background: #fa623f;
+        border-color: #fa5a35;
+        background-image: -webkit-linear-gradient(top, #fc9f8a, #fa623f);
+        background-image: -moz-linear-gradient(top, #fc9f8a, #fa623f);
+        background-image: -o-linear-gradient(top, #fc9f8a, #fa623f);
+        background-image: linear-gradient(to bottom, #fc9f8a, #fa623f);
+    }
+
+.link-encomendas {
+    margin-left: 70em;
+}
+
+.tamanho-datas {
+    width: 20em;
+}
+
+.de {
+    margin-left: 15em;
+}
+
+.hideReserva {
+    display: none !important;
+}
+
+.hideOcorrencias {
+    display: none !important;
+}
+
+.hideReunioes {
+    display: none !important;
+}
+
+.btn-post {
+    margin-left: 97em;
+}
+
+.post {
+    /*border: 1px solid red;*/
+    list-style: none;
+}
+
+.alert-info-post {
+    color: black;
+    background-color: #ECECEC;
+    border-color: #B7B7B7;
+    width: 45em;
+}
+
+.dthr-post {
+    font-size: 10px;
+    margin-left: 47em;
+}
+
+.excluir-post {
+    font-size: 13px;
+    cursor:pointer;
+}
+
+.exibir-comentarios {
+    font-size: 11px;
+    margin-left: 42.5em;
+    cursor:pointer; 
+}

@@ -1,0 +1,170 @@
+﻿@model RedeSocialCondominio.ViewModels.MudancaViewModel
+@{
+    ViewBag.Title = "Agendamento de Mudança";
+}
+@using (Html.BeginForm("RegistrarMudanca", "Mudanca", method: FormMethod.Post))
+{
+    <div class="text-center">
+        <img src="~/Images/delivery-truck.png" width="100" alt="" />
+        <h3>Agendamento de mudança</h3>
+        <h4>Cadastre e gerencie suas mudanças no condomínio</h4>
+    </div>
+
+    <br />
+
+    <div>
+        @if (Model.ErrorValidacao)
+        {
+            <div class="alert alert-danger" role="alert">Campos que são obrigatórios não foram fornecidos corretamente. Por favor, tente novamente.</div>
+        }
+    </div>
+    <div>
+        @if (Model.ErrorMudanca)
+        {
+            <div class="alert alert-danger" role="alert">Já existe uma mudança agendada para este dia.</div>
+        }
+    </div>
+    <div>
+        @if (Model.Sucesso)
+        {
+            <div class="alert alert-success" role="alert">Mudança agendada com sucesso!</div>
+        }
+    </div>
+
+    <div class="col-md-6">
+
+        <div class="agendar-visitante">
+            <h4>
+                <span class="negrito">
+                    Olá, @Model.NomeUsuarioLogado!
+                </span>
+            </h4><br />
+        </div>
+
+        <div>
+            <b>Todos os campos com <span class="obrigatorio">*</span> são obrigatórios. </b>
+        </div>
+
+        <div class="agendar-mudanca">
+            <div class="fields-align">
+                @Html.Label("Nome ") <span class="obrigatorio">*</span>
+                @Html.TextBoxFor(m => m.Nome, new { @class = "form-control", required = "true" })
+            </div>
+
+            <div class="fields-align">
+                @Html.Label("Tipo de mudança ") <span class="obrigatorio">*</span>
+                @Html.DropDownListFor(tm => tm.TipoMudancaId, new SelectList(Model.TiposMudanca, "Id", "Descricao"), "", new { @class = "form-control", required = "true" })
+            </div>
+
+            <div class="fields-align">
+                @Html.Label("Dia ") <span class="obrigatorio">*</span>
+                @Html.EditorFor(model => model.Dia, new { htmlAttributes = new { @class = "form-control", required = "true", type = "date" } })
+            </div>
+
+            <div class="fields-align">
+                @Html.Label("Hora ") <span class="obrigatorio">*</span>
+                @Html.TextBoxFor(m => m.Hora, "{0:hh:mm}", new { @class = @"timepicker form-control", required = "true", type = "time" })
+            </div>
+
+            <div class="fields-align">
+                @Html.Label("Detalhes ")
+                @Html.TextAreaFor(m => m.Comentario, new { rows = "4", cols = "30", @class = "form-control", placeholder = "Deixe aqui detalhes que possam nos ajudar a ajudar-te na tua mudança!" })
+            </div>
+
+            <div class="fields-align">
+                <button type="submit" class="btn btn-primary">Incluir</button>&nbsp;
+                <button class="btn btn-secondary">@Html.ActionLink("Voltar", "Index", "Home")</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+
+
+        <div class="agendar-visitante negrito">
+            Suas mudanças recentes
+        </div>
+        @{
+            if (Model.MinhasMudancas.Count() == 0)
+            {
+                <p>Você não possui nenhuma mudança agendada!</p>
+            }
+            else
+            {
+                <table class="table table-sm fields-align">
+                    <thead>
+                        <tr>
+                            <th scope="col">Tipo de mudança</th>
+                            <th scope="col">Dia</th>
+                            <th scope="col">Hora</th>
+                            <th scope="col">Detalhes</th>
+                        </tr>
+                    </thead>
+
+
+                    @foreach (var visitante in Model.MinhasMudancas)
+                    {
+                        <tbody>
+                            <tr>
+                                <td>
+                                    @if (visitante.TipoMudancaId == 1)
+                                    {
+                                        <div>De um apartamento para outro</div>
+                                    }
+                                    else if (visitante.TipoMudancaId == 2)
+                                    {
+                                        <div>Novo morador</div>
+                                    }
+                                    else if (visitante.TipoMudancaId == 3)
+                                    {
+                                        <div>Deixar condomínio</div>
+                                    }
+                                </td>
+                                <td>@visitante.Data.ToString("dd/MM/yyy")</td>
+                                <td>@visitante.Hora.ToString("HH:mm")</td>
+                                <td>@visitante.Comentario</td>
+                            </tr>
+                        </tbody>
+                    }
+                </table>
+
+            }
+        }
+
+    </div>
+
+}
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+@*<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>*@
+
+@section Scripts {
+
+    <script type="text/javascript" language="javascript">
+        $(function () {
+            $('input[type=datetime]').datepicker({
+                dateFormat: 'dd/mm/yy',
+                dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+                dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                nextText: 'Proximo',
+                prevText: 'Anterior',
+                minDate: 0,
+                changeMonth: true,
+                changeYear: true,
+                showOtherMonths: true,
+                selectOtherMonths: true
+            }).css("display", "inline-block")
+            .next("button").button({
+                icons: { primary: "ui-icon-calendar" },
+                label: "Selecione uma data",
+                text: false
+            });
+        });
+
+        $('#date_begin,#date_end').datetimepicker();
+    </script>
+
+}

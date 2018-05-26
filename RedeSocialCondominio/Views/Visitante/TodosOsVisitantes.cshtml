@@ -1,0 +1,110 @@
+﻿@model RedeSocialCondominio.ViewModels.TodosVisitantesViewModel
+
+
+@using (Html.BeginForm("FiltrarVisitantes", "Visitante", method: FormMethod.Post))
+{
+
+<div class="text-center">
+    <img src="~/Images/network.png" width="100" alt="" />
+    <h3>Todos os Visitantes</h3>
+    <h4>Acompanhe, confirme ou cancele seus visitantes</h4>
+    <h5>Utilize os campos abaixo para filtrar os resultados por período.</h5>
+</div>
+
+    <br />
+
+    <div align="center">
+        <div class="col-md-offset-1 fields-align">
+            <div class="col-md-5" align="left">
+                @Html.Label("De")
+                @Html.EditorFor(f => f.De, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+            </div>
+            <div class="col-md-5" align="left">
+                @Html.Label("Até")
+                @Html.EditorFor(f => f.Ate, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+            </div>
+            <button type="submit" class="btn btn-primary btn-filtrar">
+                <span class="glyphicon glyphicon-filter"></span>
+            </button>
+        </div>
+
+        <div>
+            @if (Model.TodosVisitantes.Count() != 0)
+            {
+                <table class="table table-bordered tbl-visitantes">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Nome</th>
+                            <th scope="col">Dia</th>
+                            <th scope="col">Hora</th>
+                            <th scope="col">Comentário</th>
+                            <th scope="col">Responsável</th>
+                            <th scope="col">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var visitante in Model.TodosVisitantes)
+                        {
+                            <tr>
+                                <td class="col-sm-1" scope="row">@visitante.Nome</td>
+                                <td class="col-sm-1" scope="row">@visitante.DiaVisita.ToString("dd/MM/yyyy")</td>
+                                <td class="col-sm-1" scope="row">@visitante.HoraVisita.ToString("HH:mm")</td>
+                                <td class="col-sm-1" scope="row">@visitante.Comentario</td>
+                                <td class="col-sm-1" scope="row"></td>
+                                <td class="col-sm-1" scope="row" align="center">
+                                    <a href="#" class="ok">
+                                        <span class="glyphicon glyphicon-ok"></span>
+                                    </a>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a href="#" class="not-ok">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </a>
+
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-warning aviso" role="alert"><b>Não</b> há nenhum visitante registrado nesse intervalo de tempo!</div>
+            }
+        </div>
+    </div>
+}
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+@*<script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>*@
+
+@section Scripts {
+
+    <script type="text/javascript" language="javascript">
+        $(function () {
+            $('input[type=datetime]').datepicker({
+                dateFormat: 'dd/mm/yy',
+                dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+                dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                nextText: 'Proximo',
+                prevText: 'Anterior',
+                changeMonth: true,
+                changeYear: true,
+                showOtherMonths: true,
+                selectOtherMonths: true
+            }).css("display", "inline-block")
+            .next("button").button({
+                icons: { primary: "ui-icon-calendar" },
+                label: "Selecione uma data",
+                text: false
+            });
+        });
+
+        $('#date_begin,#date_end').datetimepicker();
+    </script>
+
+}

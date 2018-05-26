@@ -1,0 +1,101 @@
+﻿@model RedeSocialCondominio.ViewModels.AgendarHorarioViewModel
+
+@using (Html.BeginForm("AgendarHorario", "Horario", method: FormMethod.Post))
+{
+
+    <div class="text-center">
+        <img src="~/Images/clock.png" width="100" alt="" />
+        <h3>Agendar Horário</h3>
+        <h4>Agendar um horário de visita para novos inquilinos</h4>
+    </div>
+
+    <br />
+
+    <div class="col-md-6">
+
+        <div class="agendar-visitante">
+            <h4>
+                <span class="negrito">
+                    Olá, @Model.NomeVisitante!
+                </span>
+            </h4><br />
+        </div>
+
+        <div>
+            <b>Todos os campos com <span class="obrigatorio">*</span> são obrigatórios. </b>
+        </div>
+
+        <div>
+            @if (Model.Falhou)
+            {
+                <div class="alert alert-danger" role="alert">
+                    Não é possível agendar visita no horário informado. Ordens do edifício.
+                </div>
+            }
+
+            else if (Model.Agendou)
+            {
+                <div class="alert alert-success" role="alert">
+                    Visita agendada com sucesso!
+                </div>
+            }
+        </div>
+
+        <div class="fields-align">
+            @Html.Label("Nome: ") <span class="obrigatorio">*</span>
+            @Html.TextBoxFor(u => u.NomeVisitante, new { @class = "form-control", required = "required" })
+        </div>
+
+        <div class="fields-align">
+            @Html.Label("Dia: ") <span class="obrigatorio">*</span>
+            @Html.EditorFor(u => u.Dia, new { htmlAttributes = new { @class = "form-control", required = "required", type = "date" } })
+        </div>
+
+        <div class="fields-align">
+            @Html.Label("Hora: ") <span class="obrigatorio">*</span>
+            @Html.TextBoxFor(u => u.Hora, new { @class = "form-control", required = "required", type = "time" })
+        </div>
+
+        <div class="fields-align">
+            <button type="submit" class="btn btn-primary">Incluir</button>&nbsp;
+            <button class="btn btn-secondary">@Html.ActionLink("Voltar", "Index", "Home")</button>
+        </div>
+
+    </div>
+
+}
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+@*<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>*@
+
+@section Scripts {
+
+    <script type="text/javascript" language="javascript">
+        $(function () {
+            $('input[type=datetime]').datepicker({
+                dateFormat: 'dd/mm/yy',
+                dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+                dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                nextText: 'Proximo',
+                prevText: 'Anterior',
+                minDate: 0,
+                changeMonth: true,
+                changeYear: true,
+                showOtherMonths: true,
+                selectOtherMonths: true
+            }).css("display", "inline-block")
+            .next("button").button({
+                icons: { primary: "ui-icon-calendar" },
+                label: "Selecione uma data",
+                text: false
+            });
+        });
+
+        $('#date_begin,#date_end').datetimepicker();
+    </script>
+
+}

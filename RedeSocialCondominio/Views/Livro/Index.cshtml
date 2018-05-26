@@ -1,0 +1,106 @@
+﻿@model RedeSocialCondominio.ViewModels.LivroViewModel
+
+<div>
+    <div>
+        <button class="btn btn-primary btn-sm btn-post" data-toggle="modal" data-target="#exampleModalCenter">
+            Adicionar post
+        </button>
+    </div>
+    @if (Model.Postagens.Count == 0)
+    {
+        <div class="alert alert-warning">Nenhum post foi realizado nesse período.</div>
+    }
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Adicionar post</h5>
+                </div>
+                <div class="modal-body">
+                    <textarea rows="4" cols="30" class="form-control" id="postNovo"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" id="btnSalvar">Postar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <ul>
+            @foreach (var p in Model.Postagens)
+            {
+                <li class="post">
+                    <div class="alert alert-info-post" role="alert">
+                        <div>
+                            @p.Postagem
+                        </div>
+                        <div class="dthr-post">
+                            @p.DataHoraPostagem.ToString("dd/MM/yyyy") @p.DataHoraPostagem.ToString("HH:mm")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-sm btn-default" onclick="RemoverPost(@p.Id)"><span class="glyphicon glyphicon-remove-sign not-ok excluir-post"></span></button>
+                        </div>
+                        <div class="exibir-comentarios">
+                            Exibir comentários <span class="glyphicon glyphicon-chevron-down"></span>
+                        </div>
+                    </div>
+
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            function Refresh() {
+                window.location.reload();
+            }
+
+            $("#btnSalvar").click(function () {
+                var data = {
+                    Id: 0,
+                    Post: $('#postNovo').val()
+                }
+
+                SalvarPost(data);
+            });
+
+            function SalvarPost(data) {
+                $.ajax({
+                    type: "POST",
+                    url: '/Livro/SalvarPost',
+                    data: data,
+                    success: function (data) {
+                        console.log('ok');
+                        Refresh();
+                    },
+                    error: function () {
+                        alert('Ocorreu um erro. Por favor, tente de novo.');
+                    }
+                })
+            }
+        })
+        function RemoverPost(id) {
+            if (confirm("Tem certeza que deseja excluir esse post?")) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("DeletePost", "Livro")' + "?id=" + id,
+                    success: window.location.reload(),   
+                    error: function () {
+                        alert('Ocorreu um erro. Por favor, tente de novo.');
+                    }
+                });
+            }
+        }
+
+    </script>
+
+}
+
+
