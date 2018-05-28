@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
+using RedeSocialCondominio.Models;
 
 namespace RedeSocialCondominio.ViewModels
 {
@@ -20,11 +21,13 @@ namespace RedeSocialCondominio.ViewModels
         public string Mensagem { get; internal set; }
         public bool Erro { get; set; }
         public string NomeUsuarioLogado { get; set; }
+        public IEnumerable<Reuniao> MinhasReunioes { get; set; }
 
         public ReuniaoViewModel()
         {
             Sucesso = false;
             Erro = false;
+            MinhasReunioes = new List<Reuniao>();
         }
     }
 }

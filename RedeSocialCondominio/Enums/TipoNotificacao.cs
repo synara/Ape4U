@@ -11,7 +11,8 @@ namespace RedeSocialCondominio.Enums
         Ocorrencia = 1,
         Reserva = 2,
         Reuniao = 3,
-        Encomenda = 4
+        Encomenda = 4,
+        Mudanca = 5
            
     }
 }

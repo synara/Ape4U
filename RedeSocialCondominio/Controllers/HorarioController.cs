@@ -19,10 +19,10 @@ namespace RedeSocialCondominio.Controllers
         public ActionResult Index()
         {
             var vm = new AgendarHorarioViewModel();
-            var nomeUsuario = User.Identity.Name;
-            vm.NomeVisitante = nomeUsuario.Split('-')[0];
+            vm.UsuarioLogado = User.Identity.Name.Split('-')[0];
             vm.Dia = DateTime.Now.ToLocalTime();
             vm.Hora = DateTime.Now.ToString("HH:mm");
+            vm.Horarios = unitOfWork.Horarios.GetAllHorarios();
 
             return View(vm);
         }
@@ -34,7 +34,7 @@ namespace RedeSocialCondominio.Controllers
 
             if (Util.Util.VerificarHorario(Hora))
             {
-                var horario = Horario.Criar(vm.NomeVisitante, vm.Dia, Hora, User.Identity.GetUserId());
+                var horario = Horario.Criar(vm.VisitanteNome, vm.Dia, Hora, User.Identity.GetUserId());
                 unitOfWork.Horarios.Adicionar(horario);
                 unitOfWork.Complete();
                 vm.Agendou = true;

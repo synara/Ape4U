@@ -30,7 +30,7 @@ namespace RedeSocialCondominio.Models
         public DbSet<NotificacaoEncomenda> NotificacaoEncomenda { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Comentario> Comentarios { get; set; }
-
+        public DbSet<NotificacaoMudanca> NotificacaoMudanca { get; set; }
 
         public List<ApplicationUser> ApplicationUsers { get; set; }
 
@@ -57,6 +57,7 @@ namespace RedeSocialCondominio.Models
             // .HasRequired(n => n.Usuario)
             // .WithMany(u => u.UsuarioNotificacoes)
             // .WillCascadeOnDelete(false);
+                
             
             base.OnModelCreating(modelBuilder);
         }

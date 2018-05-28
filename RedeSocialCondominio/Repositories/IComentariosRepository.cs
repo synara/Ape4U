@@ -10,5 +10,8 @@ namespace RedeSocialCondominio.Repositories
     public interface IComentariosRepository
     {
         List<Comentario> GetAllComentariosPorPostId(int postId);
+        List<Comentario> GetAllComentarios();
+        void Add(Comentario comentario);
+        void Remove(Comentario comentario);
     }
 }

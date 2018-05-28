@@ -73,5 +73,16 @@ namespace RedeSocialCondominio.Models
                 TipoNotificacao = TipoNotificacao.Encomenda
             };
         }
+
+        public static Notificacao NotificarMudanca(Mudanca mudanca, string tipoMudanca)  
+        {
+            return new Notificacao()
+            {
+                Dia = mudanca.Data,
+                TipoNotificacao = TipoNotificacao.Mudanca,
+                Assunto = tipoMudanca,
+                HoraInicial = mudanca.Hora
+            };
+        }
     }
 }

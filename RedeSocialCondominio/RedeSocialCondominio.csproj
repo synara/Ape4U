@@ -273,7 +273,9 @@
     <Compile Include="Controllers\ReservaController.cs" />
     <Compile Include="Controllers\ReuniaoController.cs" />
     <Compile Include="Controllers\VisitanteController.cs" />
+    <Compile Include="DTOs\ComentarioDTO.cs" />
     <Compile Include="DTOs\NotificacaoDTO.cs" />
+    <Compile Include="DTOs\ObservacaoDTO.cs" />
     <Compile Include="DTOs\PostDTO.cs" />
     <Compile Include="DTOs\ReservaDTO.cs" />
     <Compile Include="Enums\TipoNotificacao.cs" />
@@ -320,6 +322,14 @@
     <Compile Include="Migrations\201805251434385_addTblComentarioEPost.Designer.cs">
       <DependentUpon>201805251434385_addTblComentarioEPost.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805270303407_addcamposTblComentarioEPost.cs" />
+    <Compile Include="Migrations\201805270303407_addcamposTblComentarioEPost.Designer.cs">
+      <DependentUpon>201805270303407_addcamposTblComentarioEPost.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805270429571_TOEXAUSTA.cs" />
+    <Compile Include="Migrations\201805270429571_TOEXAUSTA.Designer.cs">
+      <DependentUpon>201805270429571_TOEXAUSTA.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -335,6 +345,7 @@
     <Compile Include="Models\Mudanca.cs" />
     <Compile Include="Models\Notificacao.cs" />
     <Compile Include="Models\NotificacaoEncomenda.cs" />
+    <Compile Include="Models\NotificacaoMudanca.cs" />
     <Compile Include="Models\NotificacaoOcorrencia.cs" />
     <Compile Include="Models\NotificacaoReserva.cs" />
     <Compile Include="Models\NotificacaoReuniao.cs" />
@@ -365,6 +376,7 @@
     <Compile Include="Repositories\ILocaisRepository.cs" />
     <Compile Include="Repositories\IMudancaRepository.cs" />
     <Compile Include="Repositories\INotificacaoEncomendaRepository.cs" />
+    <Compile Include="Repositories\INotificacaoMudancaRepository.cs" />
     <Compile Include="Repositories\INotificacaoOcorrenciaRepository.cs" />
     <Compile Include="Repositories\INotificacaoReservaRepository.cs" />
     <Compile Include="Repositories\INotificacaoReuniaoRepository.cs" />
@@ -381,6 +393,7 @@
     <Compile Include="Repositories\LocaisRepository.cs" />
     <Compile Include="Repositories\MudancaRepository.cs" />
     <Compile Include="Repositories\NotificacaoEncomendaRepository.cs" />
+    <Compile Include="Repositories\NotificacaoMudancaRepository.cs" />
     <Compile Include="Repositories\NotificacaoOcorrenciaRepository.cs" />
     <Compile Include="Repositories\NotificacaoReservaRepository.cs" />
     <Compile Include="Repositories\NotificacaoReuniaoRepository.cs" />
@@ -465,12 +478,16 @@
     <Content Include="Images\delivery-truck.png" />
     <Content Include="Images\encomendas.png" />
     <Content Include="Images\horarios.png" />
+    <Content Include="Images\Livro_virtual.png" />
+    <Content Include="Images\logo.png" />
     <Content Include="Images\mudanças.png" />
     <Content Include="Images\network.png" />
+    <Content Include="Images\notebook.png" />
     <Content Include="Images\Ocorrencias.png" />
     <Content Include="Images\reservas.png" />
     <Content Include="Images\reunioes.png" />
     <Content Include="Images\todasEncomendas.png" />
+    <Content Include="Images\user.png" />
     <Content Include="Images\visitantes.png" />
     <Content Include="Scripts\app\_run.js" />
     <Content Include="Scripts\app\app.datamodel.js" />
@@ -624,6 +641,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805251434385_addTblComentarioEPost.resx">
       <DependentUpon>201805251434385_addTblComentarioEPost.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805270303407_addcamposTblComentarioEPost.resx">
+      <DependentUpon>201805270303407_addcamposTblComentarioEPost.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805270429571_TOEXAUSTA.resx">
+      <DependentUpon>201805270429571_TOEXAUSTA.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

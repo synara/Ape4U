@@ -67,8 +67,12 @@
                 <li><span class="highlight">Sua encomenda foi recebida às <%=moment(n.horaEncomendaEntregue).format('HH:mm')%>. </span><hr /></li>
             <%}
 
-            if(n.tipoNotificacao == 4 && n.horaEncomendaEntregue == 0){%>
+            if(n.tipoNotificacao == 4 && n.horaEncomendaEntregue == null){%>
             <li><span class="highlight">Uma encomenda foi registrada!</span><hr /></li>
+            <%}
+
+            if(n.tipoNotificacao == 5){%>   
+            <li><span class="highlight">Uma mudança foi agendada para o dia <%=moment(n.dia).format('DD/MM/YYYY')%>, a partir de <%=moment(n.horaInicial).format('HH:mm')%>. O tipo da mudança é <b><%=n.assunto.toLowerCase()%></b>.</span><hr /></li>
             <%}
             })
             %>

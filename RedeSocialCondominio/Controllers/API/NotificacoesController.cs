@@ -5,7 +5,9 @@ using Microsoft.AspNet.Identity.Owin;
 using RedeSocialCondominio.DTOs;
 using RedeSocialCondominio.Enums;
 using RedeSocialCondominio.Persistence;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using System.Web.Http;
 
@@ -14,12 +16,12 @@ namespace RedeSocialCondominio.Controllers.API
     public class NotificacoesController : ApiController
     {
         private UnitOfWork unitOfWork = new UnitOfWork(new Models.ApplicationDbContext());
-        
+
         public IEnumerable<NotificacaoDTO> GetNovasNotificacoes(string usuarioId)
         {
-            var notificacoes = unitOfWork.Notificacoes.NotificacoesParaUsuarios(usuarioId);           
+            var notificacoes = unitOfWork.Notificacoes.NotificacoesParaUsuarios(usuarioId);
             var dto = new List<NotificacaoDTO>();
-            
+
             foreach (var n in notificacoes)
             {
                 dto.Add(

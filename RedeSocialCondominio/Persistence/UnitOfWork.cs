@@ -53,6 +53,8 @@ namespace RedeSocialCondominio.Persistence
 
         public IComentariosRepository Comentarios { get; set; }
 
+        public INotificacaoMudancaRepository NotificacaoMudanca { get; set; }
+
         public UnitOfWork(ApplicationDbContext ctx)
         {
             _ctx = ctx;
@@ -77,6 +79,7 @@ namespace RedeSocialCondominio.Persistence
             NotificacaoEncomenda = new NotificacaoEncomendaRepository(_ctx);
             Posts = new PostsRepository(_ctx);
             Comentarios = new ComentariosRepository(_ctx);
+            NotificacaoMudanca = new NotificacaoMudancaRepository(_ctx);
         }
 
         public void Complete()

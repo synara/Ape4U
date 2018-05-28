@@ -45,8 +45,8 @@ namespace RedeSocialCondominio.Controllers
 
             return View("Index", vm);
         }
-        
-        [ValidarPerfil]
+
+
         public ActionResult TodosOsVisitantes()
         {
             if (!Util.Util.VerificarPerfil(User.Identity.GetUserId()))

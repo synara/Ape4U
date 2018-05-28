@@ -17,7 +17,7 @@ namespace RedeSocialCondominio.Repositories
 
         public List<Post> GetAllPosts()
         {
-            return _ctx.Posts.Include("Comentarios").ToList();
+            return _ctx.Posts.OrderByDescending(p=>p.DataHoraPostagem).ToList();
         }
 
         public Post GetPostPorId(int id)

@@ -17,12 +17,15 @@ namespace RedeSocialCondominio.Controllers
 
         public ActionResult Index()
         {
-            var vm = new ReuniaoViewModel();
-            var nomeUsuario = User.Identity.Name;
-            vm.NomeUsuarioLogado = nomeUsuario.Split('-')[0];
-            vm.Dia = DateTime.Now.ToLocalTime();
-            vm.HoraInicio = DateTime.Now;
-            vm.HoraFim = DateTime.Now.AddHours(1);
+            var vm = new ReuniaoViewModel()
+            {
+                NomeUsuarioLogado = User.Identity.Name.Split('-')[0],
+                Dia = DateTime.Now,
+                HoraInicio = DateTime.Now,
+                HoraFim = DateTime.Now.AddHours(1),
+                MinhasReunioes = unitOfWork.Reunioes.GetAllReunioes()
+            };
+
             return View(vm);
         }
 
@@ -44,6 +47,8 @@ namespace RedeSocialCondominio.Controllers
                 vm.Mensagem = validacao;
                 vm.Erro = true;
             }
+
+            vm.MinhasReunioes = unitOfWork.Reunioes.GetAllReunioes();
 
             return View("Index", vm);
         }

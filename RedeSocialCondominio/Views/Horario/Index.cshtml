@@ -16,7 +16,7 @@
         <div class="agendar-visitante">
             <h4>
                 <span class="negrito">
-                    Olá, @Model.NomeVisitante!
+                    Olá, @Model.UsuarioLogado!
                 </span>
             </h4><br />
         </div>
@@ -43,7 +43,7 @@
 
         <div class="fields-align">
             @Html.Label("Nome: ") <span class="obrigatorio">*</span>
-            @Html.TextBoxFor(u => u.NomeVisitante, new { @class = "form-control", required = "required" })
+            @Html.TextBoxFor(u => u.VisitanteNome, new { @class = "form-control", required = "required" })
         </div>
 
         <div class="fields-align">
@@ -63,7 +63,47 @@
 
     </div>
 
-}
+    <div class="col-md-6">
+        <div class="agendar-visitante negrito">
+            Horários agendados recentemente.
+        </div>
+        @{
+            if (Model.Horarios.Count() == 0)
+            {
+                <div class="">
+                    Não há nenhum horário agendado.
+                </div>
+            }
+            else
+            {
+                <table class="table table-sm fields-align">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nome do visitante</th>
+                            <th scope="col">Dia</th>
+                            <th scope="col">Hora</th>
+                        </tr>
+                    </thead>
+
+
+                    @foreach (var h in Model.Horarios)
+                    {
+                        <tbody>
+                            <tr>
+                                <td>@h.NomeVisitante</td>
+                                <td>@h.Dia.ToString("dd/MM/yyy")</td>
+                                <td>@h.Hora.ToString("HH:mm")</td>
+                            </tr>
+                        </tbody>
+                    }
+                </table>
+
+            }
+        }
+
+    </div>
+
+            }
 
 <script src="~/Scripts/jquery-1.10.2.min.js"></script>
 @*<script src="~/Scripts/jquery.validate.min.js"></script>

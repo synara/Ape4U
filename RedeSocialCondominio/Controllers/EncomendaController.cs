@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
+using RedeSocialCondominio.DTOs;
 using RedeSocialCondominio.Models;
 using RedeSocialCondominio.Persistence;
 using RedeSocialCondominio.Util;
@@ -58,6 +59,7 @@ namespace RedeSocialCondominio.Controllers
             }
         }
 
+        [HttpGet]
         public ActionResult TodasEncomendas()
         {
 
@@ -82,16 +84,17 @@ namespace RedeSocialCondominio.Controllers
             return View("TodasEncomendas", vm);
         }
 
-        [HttpPost]
-        public void EncomendaRecebida(int encomendaId)
+        public ActionResult EncomendaRecebida(int encomendaId)
         {
             var encomenda = unitOfWork.Encomendas.GetEncomendaPorId(encomendaId);
             encomenda.Entregue = true;
             encomenda.NomeQuemRecebeu = User.Identity.Name;
             encomenda.HoraRecebida = DateTime.Now;
             unitOfWork.Complete();
-
             NotificarEncomendaRecebida(encomenda);
+            var vm = new TodasAsEncomendasViewModel().Encomendas = unitOfWork.Encomendas.GetAllEncomendas();
+
+            return View("TodasEncomendas", vm);
         }
 
         public void NotificarEncomendaRecebida(Encomenda encomenda)
@@ -107,6 +110,22 @@ namespace RedeSocialCondominio.Controllers
             var usuarioNotificacao = UsuarioNotificacao.Criar(notificacao, encomenda.UsuarioId, DateTime.Now);
             unitOfWork.UsuariosNotificacao.Add(usuarioNotificacao);
             unitOfWork.Complete();
+        }
+
+        public JsonResult AdicionarObservacao(ObservacaoDTO dto)
+        {
+            string status = null;
+            var encomenda = unitOfWork.Encomendas.GetEncomendaPorId(dto.Id);
+            encomenda.DescricaoEncomenda += "\n" + dto.Observacao;
+            unitOfWork.Complete();
+            status = "Observação adicionada!";
+
+            var vm = new TodasAsEncomendasViewModel()
+            {
+                Encomendas = unitOfWork.Encomendas.GetAllEncomendas()
+            };
+
+            return new JsonResult { Data = new { status = status } };
         }
     }
 }

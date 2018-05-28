@@ -11,15 +11,17 @@ namespace RedeSocialCondominio.Models
         public int Id { get; set; }
         public string Postagem { get; set; }
         public DateTime DataHoraPostagem { get; set; }
-        [NotMapped]
-        public List<Comentario> Comentarios { get; set; }
+        public string UsuarioId { get; set; }
+        public string NomeUsuarioQuePostou { get; set; }
 
-        public static Post Criar(string postagem)
+        public static Post Criar(string postagem, string usuarioId, string nomeUsuario)
         {
             return new Post()
             {
                 DataHoraPostagem = DateTime.Now,
-                Postagem = postagem
+                Postagem = postagem,
+                UsuarioId = usuarioId,
+                NomeUsuarioQuePostou = nomeUsuario
             };
         }
 

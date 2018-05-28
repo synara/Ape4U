@@ -9,13 +9,14 @@
 }
 
 <div class="text-center">
-    <img src="~/Images/appartments.png" width="100" alt="" />
-    <h4>
-        <span class="negrito">
-            Bem-vindo(a), @Model.Nome!
-        </span>
-    </h4>
+    <img src="~/Images/logo.png" width="350" />
 </div>
+
+<h4>
+    <span class="negrito">
+        Bem-vindo(a), @Model.Nome!
+    </span>
+</h4>
 
 <br />
 
@@ -23,51 +24,55 @@
     @Model.UserId
 </div>
 
-<div class="row">
+<div class="row text-center">
     <div class="col-lg-4">
-        <a href="/Visitante"><img src="~/Images/visitantes.png" alt="Generic placeholder image" width="300" height="111"></a>
+        <a href="/Visitante"><img src="~/Images/visitantes.png" class="imgLogos" alt="Generic placeholder image" width="300" height="111"></a>
     </div>
     <div class="col-lg-4">
-        <a href="/Mudanca"><img src="~/Images/mudanças.png" alt="Generic placeholder image" width="300" height="111"></a>
+        <a href="/Mudanca"><img src="~/Images/mudanças.png" class="imgLogos" alt="Generic placeholder image" width="300" height="111"></a>
     </div>
 
     @if (Model.PerfilId == 2 || Model.PerfilId == 3)
     {
         <div class="col-lg-4">
-            <a href="/Encomenda/TodasEncomendas"><img src="~/Images/todasEncomendas.png" alt="Generic placeholder image" width="300" height="111"></a>
+            <a href="/Encomenda/TodasEncomendas"><img src="~/Images/todasEncomendas.png" class="imgLogos" alt="Generic placeholder image" width="300" height="111"></a>
         </div>
     }
     else
     {
         <div class="col-lg-4">
-            <a href="/Encomenda"><img src="~/Images/encomendas.png" alt="Generic placeholder image" width="300" height="111"></a>
+            <a href="/Encomenda"><img src="~/Images/encomendas.png" class="imgLogos" alt="Generic placeholder image" width="300" height="111"></a>
         </div>
     }
 
+    @if (Model.PerfilId == 2 || Model.PerfilId == 4)
+    {
+        <div class="col-lg-4">
+            <a href="/horario"><img src="~/Images/horarios.png" class="imgLogos" alt="Generic placeholder image" width="300" height="111"></a>
+        </div>
+    }
+        <div class="col-lg-4">
+            <a href="/reserva"><img src="~/Images/reservas.png" class="imgLogos" alt="Generic placeholder image" width="300" height="111"></a><span class="badgeHome red hideReserva" id="js-notifications-reservas-count"></span>
+        </div>
+        <div class="col-lg-4">
+            <a href="/ocorrencia"><img src="~/Images/Ocorrencias.png" class="imgLogos" alt="Generic placeholder image" width="300" height="111"></a><span class="badgeHome red hideOcorrencias" id="js-notifications-ocorrencias-count"></span>
+        </div>
+        <div class="col-lg-4">
+            <a href="/reuniao"><img src="~/Images/reunioes.png" class="imgLogos" alt="Generic placeholder image" width="300" height="111"></a><span class="badgeHome red hideReunioes" id="js-notifications-reunioes-count"></span>
+        </div>
+        <div class="col-lg-4">
+            <a href="/livro"><img src="~/Images/Livro_virtual.png" class="imgLogos" alt="Generic placeholder image" width="300" height="111"></a><span class="badgeHome red hideLivro" id=""></span>
+        </div>
 
-    <div class="col-lg-4">
-        <a href="/horario"><img src="~/Images/horarios.png" alt="Generic placeholder image" width="300" height="111"></a>
     </div>
-    <div class="col-lg-4">
-        <a href="/reserva"><img src="~/Images/reservas.png" alt="Generic placeholder image" width="300" height="111"></a><span class="badgeHome red hideReserva" id="js-notifications-reservas-count"></span>
-    </div>
-    <div class="col-lg-4">
-        <a href="/ocorrencia"><img src="~/Images/Ocorrencias.png" alt="Generic placeholder image" width="300" height="111"></a><span class="badgeHome red hideOcorrencias" id="js-notifications-ocorrencias-count"></span>
-    </div>
-    <div class="col-lg-4">
-        <a href="/reuniao"><img src="~/Images/reunioes.png" alt="Generic placeholder image" width="300" height="111"></a><span class="badgeHome red hideReunioes" id="js-notifications-reunioes-count"></span>
-    </div>
 
+    @Scripts.Render("~/bundles/lib")
 
-</div>
+        <script>
+            $(document).ready(function () {
 
-@Scripts.Render("~/bundles/lib")
+                $(".badgeHome")
+                    .addClass("animated bounceInDown");
 
-<script>
-    $(document).ready(function () {
-
-        $(".badgeHome")
-            .addClass("animated bounceInDown");
-
-    });
-</script>
+            });
+        </script>

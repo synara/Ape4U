@@ -18,5 +18,15 @@ namespace RedeSocialCondominio.Repositories
         {
             _ctx.NotificacaoReuniao.Add(reuniao);
         }
+
+        public List<NotificacaoReserva> GetAllReunioes()
+        {
+            return _ctx.NotificacaoReserva.ToList();
+        }
+
+        public List<NotificacaoReserva> GetAllReunioesPorId(int id)
+        {
+            return _ctx.NotificacaoReserva.Where(r => r.Id == id).ToList();
+        }
     }
 }

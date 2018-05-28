@@ -23,7 +23,7 @@ namespace RedeSocialCondominio.Repositories
 
         public List<UsuarioNotificacao> NotificacoesForamLidas(string usuarioId)
         {
-            return _ctx.UsuarioNotificacoes.Where(u => u.UsuarioId == usuarioId && !u.IsLido).ToList();
+            return _ctx.UsuarioNotificacoes.Where(u => u.UsuarioId == usuarioId && !u.IsLido).Take(5).ToList();
         }
 
         public List<Notificacao> NotificacoesParaUsuarios(string usuarioId)
@@ -31,6 +31,7 @@ namespace RedeSocialCondominio.Repositories
             return _ctx.UsuarioNotificacoes
                 .Where(n => n.UsuarioId == usuarioId && !n.IsLido)
                 .Select(n => n.Notificacao)
+                .Take(5)
                 .ToList();
         }
     }

@@ -299,7 +299,7 @@
                     data: data,
                     success: function (data) {
                         if (data.status) {
-                            toastr.info(data.status);
+                            alert(data.status);
                             RenderCalendar();
                             $('#myModalSave').modal('hide');
                         }

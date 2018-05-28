@@ -17,11 +17,11 @@
         <div class="col-md-12 fields-align">
             <div class="col-md-6" align="left">
                 @Html.Label("De", new { @class = "de" })
-                @Html.EditorFor(f => f.De, new { htmlAttributes = new { @class = " de form-control tamanho-datas", required = "required" } })
+                @Html.EditorFor(f => f.De, new { htmlAttributes = new { @class = " de form-control tamanho-datas", required = "required", type = "date" } })
             </div>
             <div class="col-md-6" align="left">
                 @Html.Label("Até")
-                @Html.EditorFor(f => f.Ate, new { htmlAttributes = new { @class = "form-control tamanho-datas", required = "required" } })
+                @Html.EditorFor(f => f.Ate, new { htmlAttributes = new { @class = "form-control tamanho-datas", required = "required", type = "date" } })
                 <div>
                     <button type="submit" class="btn btn-primary btn-filtrar">
                         <span class="glyphicon glyphicon-filter"></span>
@@ -29,8 +29,11 @@
                 </div>
             </div>
         </div>
+        <div class="loader hide"></div>
+
     </div>
 }
+
 
 <div align="center">
     @if (Model.Encomendas.Count() != 0)
@@ -38,19 +41,20 @@
         <table class="table table-bordered tbl-visitantes">
             <thead class="thead-dark">
                 <tr>
-                    <th scope="col">Descrição</th>
-                    <th scope="col">Frágil?</th>
-                    <th scope="col">Hora</th>
-                    <th scope="col">Responsável</th>
-                    <th scope="col">Quem recebeu</th>
-                    <th scope="col">Ações</th>
+                    <th scope="col" class="">Dia previsto</th>
+                    <th scope="col" class="">Frágil?</th>
+                    <th scope="col" class="">Responsável</th>
+                    <th scope="col" class="">Quem recebeu</th>
+                    <th scope="col">Dia entregue</th>
+                    <th scope="col">Observações</th>
+                    <th scope="col">Recebida?</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var e in Model.Encomendas)
                 {
                     <tr>
-                        <td class="col-sm-1" scope="row">@e.DescricaoEncomenda</td>
+                        <td class="col-sm-1" scope="row">@e.DataHoraEntrega.ToString("dd/MM/yyy")</td>
                         <td class="col-sm-1" scope="row">
                             @if (e.Fragil)
                             {
@@ -61,47 +65,68 @@
                                 <span>Não</span>
                             }
                         </td>
-                        <td class="col-sm-1" scope="row" encomendaId="e.Id">@e.DataHoraEntrega</td>
-                        <td class="col-sm-1" scope="row">@e.NomeResponsavel</td>
+                        <td class="col-sm-1" scope="row" encomendaId="e.Id">@e.NomeResponsavel</td>
                         <td class="col-sm-1" scope="row">@e.NomeQuemRecebeu</td>
+                        <td class="col-sm-1" scope="row">@e.DataHoraEntrega.ToString("dd/MM/yyyy"), às @e.DataHoraEntrega.ToString("HH:mm")</td>
+                        <td class="col-md-2" scope="row">
+                            @{
+                                var descricao = "descricao" + e.Id;
+                                <span id="@descricao">@e.DescricaoEncomenda</span>
+                            }
+                            <div class="" align="right">
+                                <span class="glyphicon glyphicon-edit btnEditar" data-toggle="modal" data-target="#myModalSave" onclick="AdicionarObservacao(@e.Id)"></span>
+                            </div>
+                        </td>
                         @if (e.Entregue)
                         {
-                            <td class="col-sm-1" scope="row" align="center" value="@e.Id">
+                            <td class="col-md-1" scope="row" value="@e.Id">
 
                                 <button class="btn btn-default ok disabled" onclick="EncomendaRecebida(@e.Id)">
                                     <span class="glyphicon glyphicon-ok"></span>
-                                </button>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <button class="btn btn-default not-ok disabled">
-                                    <span class="glyphicon glyphicon-remove"></span>
                                 </button>
                             </td>
                         }
                         else
                         {
-                            <td class="col-sm-1" scope="row" align="center" value="@e.Id">
-
+                            <td class="col-sm-1" scope="row" value="@e.Id">
                                 <button class="btn btn-default ok" onclick="EncomendaRecebida(@e.Id)">
                                     <span class="glyphicon glyphicon-ok"></span>
-                                </button>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <button class="btn btn-default not-ok">
-                                    <span class="glyphicon glyphicon-remove"></span>
                                 </button>
                             </td>
                         }
 
                     </tr>
-                }
+                                }
 
             </tbody>
         </table>
-    }
-    else
-    {
-        <div class="alert alert-warning aviso" role="alert"><b>Não</b> há nenhuma encomenda registrada nesse intervalo de tempo!</div>
-    }
+                                }
+                                else
+                                {
+                                    <div class="alert alert-warning aviso" role="alert"><b>Não</b> há nenhuma encomenda registrada nesse intervalo de tempo!</div>
+                                }
 </div>
+
+<div id="myModalSave" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Adicionar observação</h4>
+            </div>
+            <div class="modal-body">
+                @{
+                    <textarea cols="30" rows="4" id="observacao" class="form-control"></textarea>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnAdd" class="btn btn-primary">Salvar</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="btn-agendar-visitante">
     <button class="btn btn-secondary">@Html.ActionLink("Voltar", "Index", "Home")</button>&nbsp;
@@ -115,17 +140,63 @@
 @section Scripts {
 
     <script type="text/javascript" language="javascript">
+
+        function Recarregar() {
+            setTimeout(function () {
+                window.location.reload();
+            }, 2000);
+        }
+
         function EncomendaRecebida(id) {
             if (confirm("Encomenda realmente entregue?")) {
+                $('.loader').removeClass('hide');
                 var encomendaId = id;
                 $.ajax({
                     type: "POST",
                     url: '@Url.Action("EncomendaRecebida", "Encomenda")' + "?encomendaId=" + encomendaId,
-                    dataType: 'json'
+                    dataType: 'json',
+                    success: Recarregar()
                 });
-
             }
         }
+
+        function AdicionarObservacao(id) {
+            var textarea = document.querySelector('textarea');
+
+            $('#myModalSave').on('hidden.bs.modal', function () {
+                $(this).find('textarea').val('');
+            });
+
+            $('#btnAdd').click(function () {
+                var dto = {
+                    Id: id,
+                    Observacao: textarea.value
+                }
+
+                SalvarObservacao(dto);
+            });
+
+        }
+
+        function SalvarObservacao(dto) {
+            $.ajax({
+                type: "POST",
+                url: '/encomenda/adicionarobservacao',
+                data: dto,
+                success: function (data) {
+                    if (data.status) {
+                        $('#myModalSave').modal('hide');
+                        $('.loader').removeClass('hide');
+                        Recarregar();
+                    }
+                },
+                error: function () {
+                    alert('Ocorreu um erro. Por favor, tente de novo');
+                }
+            })
+
+        }
+
     </script>
 
 }

@@ -10,5 +10,7 @@ namespace RedeSocialCondominio.Repositories
     public interface INotificacaoReuniaoRepository
     {
         void Add(NotificacaoReuniao reuniao);
+        List<NotificacaoReserva> GetAllReunioes();
+        List<NotificacaoReserva> GetAllReunioesPorId(int id);
     }
 }

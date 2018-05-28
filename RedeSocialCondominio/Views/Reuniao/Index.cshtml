@@ -64,4 +64,44 @@
             <button class="btn btn-secondary">@Html.ActionLink("Voltar", "Index", "Home")</button>
         </div>
     </div>
+    <div class="col-md-6">
+        <div class="agendar-visitante negrito">
+            Reuniões recentes
+        </div>
+        @{
+            if (Model.MinhasReunioes.Count() == 0)
+            {
+                <div class="">
+                    Não há nenhuma reunião agendada durante a ultima semana!
+                </div>
+            }
+            else
+            {
+                <table class="table table-sm fields-align">
+                    <thead>
+                        <tr>
+                            <th scope="col">Assunto</th>
+                            <th scope="col">Dia</th>
+                            <th scope="col">Início</th>
+                            <th scope="col">Término</th>
+                        </tr>
+                    </thead>
+
+
+                    @foreach (var reuniao in Model.MinhasReunioes)
+                    {
+                        <tbody>
+                            <tr>
+                                <td>@reuniao.Assunto</td>
+                                <td>@reuniao.Dia.ToString("dd/MM/yyy")</td>
+                                <td>@reuniao.HoraInicio.ToString("HH:mm")</td>
+                                <td>@reuniao.HoraFim.ToString("HH:mm")</td>
+                            </tr>
+                        </tbody>
+                    }
+                </table>
+
+            }
+        }
+    </div>
 }

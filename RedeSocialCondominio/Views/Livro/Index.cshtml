@@ -1,53 +1,107 @@
 ﻿@model RedeSocialCondominio.ViewModels.LivroViewModel
 
-<div>
-    <div>
-        <button class="btn btn-primary btn-sm btn-post" data-toggle="modal" data-target="#exampleModalCenter">
-            Adicionar post
-        </button>
+<div class="text-center">
+    <img src="~/Images/notebook.png" width="100" alt="" />
+    <h3>Livro Virtual</h3>
+    <h4>Faça postagens e interaja com outros inquilinos.</h4>
+</div>
+
+<br />
+<br />
+
+
+<div class="col-md-6">
+
+    <div class="agendar-visitante">
+        <h4>
+            <span class="negrito">
+                Olá, @Model.NomeUsuarioLogado!
+            </span>
+        </h4>
     </div>
+
+    <br />
+
+    <h4>O que você está pensando?</h4>
+    <textarea rows="4" cols="30" class="form-control" id="postNovo" placeholder="Digite aqui a sua postagem." required></textarea>
+
+    <div class="btn-agendar-visitante">
+        <button type="button" class="btn btn-primary" id="btnSalvar">Publicar</button>&nbsp;
+        <button class="btn btn-secondary">@Html.ActionLink("Voltar", "Index", "Home")</button>
+    </div>
+
+</div>
+<div class="col-md-6">
+
+    <h4>Últimas postagens:</h4>
+    <hr />
+
     @if (Model.Postagens.Count == 0)
     {
-        <div class="alert alert-warning">Nenhum post foi realizado nesse período.</div>
-    }
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Adicionar post</h5>
-                </div>
-                <div class="modal-body">
-                    <textarea rows="4" cols="30" class="form-control" id="postNovo"></textarea>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary" id="btnSalvar">Postar</button>
-                </div>
-            </div>
+        <div class="alert alert-warning">
+            Nenhum post foi realizado nesse período.
         </div>
-    </div>
+    }
 
     <div>
-        <ul>
+
+        <ul class="list-unstyled">
             @foreach (var p in Model.Postagens)
             {
-                <li class="post">
-                    <div class="alert alert-info-post" role="alert">
-                        <div>
-                            @p.Postagem
-                        </div>
-                        <div class="dthr-post">
-                            @p.DataHoraPostagem.ToString("dd/MM/yyyy") @p.DataHoraPostagem.ToString("HH:mm")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-sm btn-default" onclick="RemoverPost(@p.Id)"><span class="glyphicon glyphicon-remove-sign not-ok excluir-post"></span></button>
-                        </div>
-                        <div class="exibir-comentarios">
-                            Exibir comentários <span class="glyphicon glyphicon-chevron-down"></span>
-                        </div>
-                    </div>
+                <li class="media">
+                    <img class="mr-3 img" src="~/Images/user.png" width="50" alt="Generic placeholder image">
+                    <div class="media-body">
+                        <button class="btn btn-sm btn-default excluir-post" onclick="RemoverPost(@p.Id)"><span class="glyphicon glyphicon-remove-sign not-ok"></span></button>
+                        <h4 class="mt-0 mb-1">@p.NomeUsuarioQuePostou </h4>
+                        @p.Postagem
+                        <br />
+                        <br />
 
+                        <div class="exibir-comentarios">
+                            @{
+                                string id = "textExibir" + p.Id;
+                                <button class="excluir-post" onclick="ExibirComentarios(@p.Id)" id="@id">Exibir comentários</button>
+                            }
+                        </div>
+
+                        <p>Postado em: @p.DataHoraPostagem.ToString("dd/MM/yyyy") às @p.DataHoraPostagem.ToString("HH:mm")</p>
+
+
+                        <hr />
+
+
+                        @*Comentarios:*@
+                        <div class="media mt-3 hide" id="@p.Id">
+                            <ul class="list-unstyled">
+                                @foreach (var c in Model.Comentarios.Where(c => c.PostId == p.Id))
+                                {
+                                    <li id="@c.PostId">
+                                        <img class="img" src="~/Images/user.png" width="50" alt="Generic placeholder image">
+                                        <div class="media-body">
+                                            <button class="btn btn-sm btn-default excluir-post" onclick="RemoverComentario(@c.Id)"><span class="glyphicon glyphicon-remove-sign not-ok"></span></button>
+                                            <h5 class="mt-0">@c.NomeUsuarioQuePostou</h5>
+                                            @c.Comment
+                                        </div>
+
+                                        <hr />
+                                    </li>
+                                }
+                            </ul>
+
+                            @{
+                                string comentarioId = "comentario" + p.Id;
+                                <h4>Comentar</h4>
+                                <textarea rows="3" cols="30" class="form-control" id="@comentarioId" placeholder="Digite o seu comentário..."></textarea>
+                                <br />
+                                <button class="btn btn-primary" id="btnComentar" onclick="SalvarComentario(@p.Id)">Comentar</button>
+                            }
+                        </div>
+
+                    </div>
                 </li>
-            }
+                                }
         </ul>
+
     </div>
 </div>
 
@@ -58,10 +112,6 @@
     <script>
         $(document).ready(function () {
 
-            function Refresh() {
-                window.location.reload();
-            }
-
             $("#btnSalvar").click(function () {
                 var data = {
                     Id: 0,
@@ -71,14 +121,15 @@
                 SalvarPost(data);
             });
 
+
             function SalvarPost(data) {
                 $.ajax({
                     type: "POST",
                     url: '/Livro/SalvarPost',
                     data: data,
                     success: function (data) {
-                        console.log('ok');
-                        Refresh();
+                        alert(data.status);
+                        window.location.reload();
                     },
                     error: function () {
                         alert('Ocorreu um erro. Por favor, tente de novo.');
@@ -91,14 +142,65 @@
                 $.ajax({
                     type: "POST",
                     url: '@Url.Action("DeletePost", "Livro")' + "?id=" + id,
-                    success: window.location.reload(),   
+                    success: function(data) {
+                        alert(data.status);
+                        window.location.reload();
+                    },
                     error: function () {
                         alert('Ocorreu um erro. Por favor, tente de novo.');
                     }
                 });
             }
         }
+        function ExibirComentarios(id) {
 
+            if ($('#textExibir'+id).text() == "Exibir comentários") {
+                $('#' + id).removeClass('hide');
+                $('#textExibir'+id).html("Esconder comentários");
+            }
+
+            else if ($('#textExibir'+id).text() == "Esconder comentários") {
+                $('#' + id).addClass('hide');
+                $('#textExibir'+id).html("Exibir comentários");
+            }
+        }
+
+        function SalvarComentario(id) {
+            var data = {
+                Id: 0,
+                PostId: id,
+                Comentario: $('#comentario'+id).val()
+            }
+
+            $.ajax({
+                type: "POST",
+                url: '/Livro/SalvarComentario',
+                data: data,
+                success: function (data) {
+                    alert(data.status);
+                    window.location.reload();
+                },
+                error: function () {
+                    alert('Ocorreu um erro. Por favor, tente de novo.');
+                }
+            })
+        }
+
+         function RemoverComentario(id) {
+            if (confirm("Tem certeza que deseja excluir esse comentário?")) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("DeleteComentario", "Livro")' + "?id=" + id,
+                    success: function(data) {
+                        alert(data.status);
+                        window.location.reload();
+                    },
+                    error: function () {
+                        alert('Ocorreu um erro. Por favor, tente de novo.');
+                    }
+                });
+            }
+        }
     </script>
 
 }

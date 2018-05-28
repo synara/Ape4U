@@ -15,9 +15,24 @@ namespace RedeSocialCondominio.Repositories
             _ctx = ctx;
         }
 
+        public void Add(Comentario comentario)
+        {
+            _ctx.Comentarios.Add(comentario);
+        }
+
+        public List<Comentario> GetAllComentarios()
+        {
+            return _ctx.Comentarios.OrderBy(c => c.DataHoraComentario).ToList();
+        }
+
         public List<Comentario> GetAllComentariosPorPostId(int postId)
         {
             return _ctx.Comentarios.Where(c => c.PostId == postId).ToList();
+        }
+
+        public void Remove(Comentario comentario)
+        {
+            _ctx.Comentarios.Remove(comentario);
         }
     }
 }
